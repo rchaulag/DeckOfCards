@@ -1,48 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Cards.Console.Client.Models;
+
 namespace Cards.Console.Client
 {
     public class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             printHeader();
-            int selectedOption = 0;
+            var selectedOption = 0;
             do
             {
                 selectedOption = getInput();
                 processInput(selectedOption);
-            }
-            while (selectedOption != 0);
+            } while (selectedOption != 0);
             System.Console.ReadLine();
         }
 
         #region Processing Methods
+
         /// <summary>
-        /// ProcessStandardDeckOfCards
-        /// Orders cards of deck based on numbers/ ranking order
-        /// 1-13 (heart) 1-13 (diamond) like that 
+        ///     ProcessStandardDeckOfCards
+        ///     Orders cards of deck based on numbers/ ranking order
+        ///     1-13 (heart) 1-13 (diamond) like that
         /// </summary>
-        static void ProcessStandardDeckOfCards()
+        private static void ProcessStandardDeckOfCards()
         {
             var deck = LoadDeckOfCards();
             beautify();
-            foreach (Card card in deck.Cards)
+            foreach (var card in deck.Cards)
             {
                 System.Console.WriteLine($"     |{card._order,7}|{card._suit,7}|");
                 if (card._order == Order.King) System.Console.WriteLine("---------------------------------------");
-
             }
         }
 
         /// <summary>
-        /// ProcessRandomShuffledDeckOfCards
-        /// randomizes the cards of deck, requires complete deck
-        /// processes radomly shuffled cards
+        ///     ProcessRandomShuffledDeckOfCards
+        ///     randomizes the cards of deck, requires complete deck
+        ///     processes radomly shuffled cards
         /// </summary>
-        static void ProcessRandomShuffledDeckOfCards()
+        private static void ProcessRandomShuffledDeckOfCards()
         {
             var deck = LoadDeckOfCards();
             var randomizedDeck = Randomize(deck);
@@ -55,11 +54,11 @@ namespace Cards.Console.Client
         }
 
         /// <summary>
-        /// ProcessOrderedShuffledDeckOfCards
-        /// shuffles the cards of deck by suit, thats defined on suit class 
-        /// spade (1-13) , heart (1-13) like this
+        ///     ProcessOrderedShuffledDeckOfCards
+        ///     shuffles the cards of deck by suit, thats defined on suit class
+        ///     spade (1-13) , heart (1-13) like this
         /// </summary>
-        static void ProcessOrderedShuffledDeckOfCards()
+        private static void ProcessOrderedShuffledDeckOfCards()
         {
             var deck = LoadDeckOfCards();
             var orderedDeck = deck.Cards.OrderBy(p => p._order).ToList();
@@ -75,22 +74,21 @@ namespace Cards.Console.Client
 
         #region Private Methods
 
-
-        static int getInput()
+        private static int getInput()
         {
-            int selectedOption = 0;
+            var selectedOption = 0;
             System.Console.WriteLine("1 : Get Standard Deck of Cards. Ordered by the Numbers ");
             System.Console.WriteLine("2 : Get Randomly Shuffled Deck of Cards");
             System.Console.WriteLine("3 : Get Ordered Shuffled Deck of Cards. Ordered by the Suits ");
             System.Console.WriteLine("0 : Exit  ");
             System.Console.Write("Enter a value : ");
-            string inputStr = System.Console.ReadLine();
-            Int32.TryParse(inputStr, out selectedOption);
+            var inputStr = System.Console.ReadLine();
+            int.TryParse(inputStr, out selectedOption);
             System.Console.WriteLine(" You've entered = {0}", selectedOption);
             return selectedOption;
         }
 
-        static void printHeader()
+        private static void printHeader()
         {
             System.Console.WriteLine("==============================================================");
             System.Console.WriteLine("==============================================================");
@@ -99,7 +97,7 @@ namespace Cards.Console.Client
             System.Console.WriteLine("==============================================================");
         }
 
-        static void processInput(int value)
+        private static void processInput(int value)
         {
             var guid = Guid.NewGuid();
             switch (value)
@@ -117,10 +115,9 @@ namespace Cards.Console.Client
                     System.Console.WriteLine("Press ENTER to exit the program");
                     break;
             }
-
         }
 
-        static void beautify()
+        private static void beautify()
         {
             System.Console.WriteLine($"     |{"Order ",7}|{"Suit",7}|");
             System.Console.WriteLine("-----------------------------------");
@@ -128,14 +125,14 @@ namespace Cards.Console.Client
 
         public static Deck LoadDeckOfCards()
         {
-            Deck deck = new Deck();
+            var deck = new Deck();
             var suitList = Enum.GetNames(typeof(Suit)).Length;
             var orderList = Enum.GetNames(typeof(Order)).Length;
-            for (int suitIndex = 1; suitIndex <= suitList; suitIndex++)
+            for (var suitIndex = 1; suitIndex <= suitList; suitIndex++)
             {
-                for (int orderIndex = 1; orderIndex <= orderList; orderIndex++)
+                for (var orderIndex = 1; orderIndex <= orderList; orderIndex++)
                 {
-                    deck.Cards.Add(new Card((Suit)suitIndex, (Order)orderIndex));
+                    deck.Cards.Add(new Card((Suit) suitIndex, (Order) orderIndex));
                 }
             }
             return deck;
@@ -143,11 +140,11 @@ namespace Cards.Console.Client
 
         public static Deck Randomize(Deck deck)
         {
-            Random rmd = new Random();
-            List<Card> cards = deck.Cards;
-            for (int i = cards.Count - 1; i > 0; i--)
+            var rmd = new Random();
+            var cards = deck.Cards;
+            for (var i = cards.Count - 1; i > 0; i--)
             {
-                int tempIndex = rmd.Next(i + 1);
+                var tempIndex = rmd.Next(i + 1);
                 if (tempIndex != i)
                 {
                     var tmp = cards[tempIndex];
@@ -159,8 +156,6 @@ namespace Cards.Console.Client
             return deck;
         }
 
-
         #endregion
     }
-
 }
